@@ -20,10 +20,7 @@ typedef RenderStickyHeaderCallback = void Function(double stuckAmount);
 /// unless overlapHeaders is set to true. The supplied callback will be used
 /// to report the
 ///
-class RenderStickyHeader extends RenderBox
-    with
-        ContainerRenderObjectMixin<RenderBox, MultiChildLayoutParentData>,
-        RenderBoxContainerDefaultsMixin<RenderBox, MultiChildLayoutParentData> {
+class RenderStickyHeader extends RenderBox with ContainerRenderObjectMixin<RenderBox, MultiChildLayoutParentData>, RenderBoxContainerDefaultsMixin<RenderBox, MultiChildLayoutParentData> {
   RenderStickyHeaderCallback? _callback;
   ScrollPosition _scrollPosition;
   bool _overlapHeaders;
@@ -163,16 +160,12 @@ class RenderStickyHeader extends RenderBox
 
   @override
   double computeMinIntrinsicHeight(double width) {
-    return _overlapHeaders
-        ? _contentBox.getMinIntrinsicHeight(width)
-        : (_headerBox.getMinIntrinsicHeight(width) + _contentBox.getMinIntrinsicHeight(width));
+    return _overlapHeaders ? _contentBox.getMinIntrinsicHeight(width) : (_headerBox.getMinIntrinsicHeight(width) + _contentBox.getMinIntrinsicHeight(width));
   }
 
   @override
   double computeMaxIntrinsicHeight(double width) {
-    return _overlapHeaders
-        ? _contentBox.getMaxIntrinsicHeight(width)
-        : (_headerBox.getMaxIntrinsicHeight(width) + _contentBox.getMaxIntrinsicHeight(width));
+    return _overlapHeaders ? _contentBox.getMaxIntrinsicHeight(width) : (_headerBox.getMaxIntrinsicHeight(width) + _contentBox.getMaxIntrinsicHeight(width));
   }
 
   @override

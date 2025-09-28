@@ -16,106 +16,16 @@ class ExampleApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blueGrey,
       ),
-      home: const MainScreen(),
+      home: Example2(),
     );
   }
 }
-
-@immutable
-class MainScreen extends StatelessWidget {
-  const MainScreen({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ScaffoldWrapper(
-      title: 'Sticky Headers Example',
-      child: ListView(
-        children: ListTile.divideTiles(
-          context: context,
-          tiles: <Widget>[
-            ListTile(
-              title: const Text('Example 1 - Headers and Content'),
-              onTap: () => navigateTo(context, (context) => const Example1()),
-            ),
-            ListTile(
-              title: const Text('Example 2 - Animated Headers with Content'),
-              onTap: () => navigateTo(context, (context) => const Example2()),
-            ),
-            ListTile(
-              title: const Text('Example 3 - Headers overlapping the Content'),
-              onTap: () => navigateTo(context, (context) => const Example3()),
-            ),
-            ListTile(
-              title: const Text('Example 4 - Example using scroll controller'),
-              onTap: () => navigateTo(context, (context) => const Example4()),
-            ),
-          ],
-        ).toList(growable: false),
-      ),
-    );
-  }
-
-  void navigateTo(BuildContext context, WidgetBuilder builder) {
-    Navigator.of(context).push(MaterialPageRoute(builder: builder));
-  }
-}
-
-@immutable
-class Example1 extends StatelessWidget {
-  const Example1({
-    Key? key,
-    this.controller,
-  }) : super(key: key);
-
-  final ScrollController? controller;
-
-  @override
-  Widget build(BuildContext context) {
-    return ScaffoldWrapper(
-      wrap: controller == null,
-      title: 'Example 1',
-      child: ListView.builder(
-        primary: controller == null,
-        controller: controller,
-        itemBuilder: (context, index) {
-          return StickyHeader(
-            controller: controller, // Optional
-            header: Container(
-              height: 50.0,
-              color: Colors.blueGrey[700],
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              alignment: Alignment.centerLeft,
-              child: Text(
-                'Header #$index',
-                style: const TextStyle(color: Colors.white),
-              ),
-            ),
-            content: Container(
-              color: Colors.grey[300],
-              child: Image.network(
-                imageForIndex(index),
-                fit: BoxFit.cover,
-                width: double.infinity,
-                height: 200.0,
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  String imageForIndex(int index) {
-    return Images.imageThumbUrls[index % Images.imageThumbUrls.length];
-  }
-}
-
 @immutable
 class Example2 extends StatelessWidget {
   const Example2({
-    Key? key,
+    super.key,
     this.controller,
-  }) : super(key: key);
+  });
 
   final ScrollController? controller;
 
@@ -123,14 +33,14 @@ class Example2 extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScaffoldWrapper(
       wrap: controller == null,
-      title: 'Example 2',
+      title: 'Example',
       child: ListView.builder(
         primary: controller == null,
         controller: controller,
         itemBuilder: (context, index) {
-          return StickyHeaderBuilder(
+          return ExpandingStickyHeaderBuilder(
             controller: controller, // Optional
-            builder: (BuildContext context, double stuckAmount) {
+            builder: (BuildContext context, double stuckAmount, bool isHovering) {
               stuckAmount = 1.0 - stuckAmount.clamp(0.0, 1.0);
               return Container(
                 height: 50.0,
@@ -157,60 +67,6 @@ class Example2 extends StatelessWidget {
                       ),
                     ),
                   ],
-                ),
-              );
-            },
-            content: Container(
-              color: Colors.grey[300],
-              child: Image.network(
-                imageForIndex(index),
-                fit: BoxFit.cover,
-                width: double.infinity,
-                height: 200.0,
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  String imageForIndex(int index) {
-    return Images.imageThumbUrls[index % Images.imageThumbUrls.length];
-  }
-}
-
-@immutable
-class Example3 extends StatelessWidget {
-  const Example3({
-    Key? key,
-    this.controller,
-  }) : super(key: key);
-
-  final ScrollController? controller;
-
-  @override
-  Widget build(BuildContext context) {
-    return ScaffoldWrapper(
-      wrap: controller == null,
-      title: 'Example 3',
-      child: ListView.builder(
-        primary: controller == null,
-        controller: controller,
-        itemBuilder: (context, index) {
-          return StickyHeaderBuilder(
-            overlapHeaders: true,
-            controller: controller, // Optional
-            builder: (BuildContext context, double stuckAmount) {
-              stuckAmount = 1.0 - stuckAmount.clamp(0.0, 1.0);
-              return Container(
-                height: 50.0,
-                color: Colors.grey.shade900.withOpacity(0.6 + stuckAmount * 0.4),
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Header #$index',
-                  style: const TextStyle(color: Colors.white),
                 ),
               );
             },
@@ -310,9 +166,7 @@ class _Example4State extends State<Example4> {
             removeTop: true,
             child: TabBarView(
               children: <Widget>[
-                Example1(controller: _controller[1]),
                 Example2(controller: _controller[2]),
-                Example3(controller: _controller[3]),
               ],
             ),
           ),
